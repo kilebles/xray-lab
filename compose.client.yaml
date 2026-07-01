@@ -1,0 +1,15 @@
+name: xray-lab-client
+
+services:
+  xray-client:
+    image: ghcr.io/xtls/xray-core:${XRAY_VER:-v26.3.27}
+    container_name: xray-client
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.secrets
+    ports:
+      - "1080:1080"
+      - "1081:1081"
+    volumes:
+      - ./configs/client/config.json:/etc/xray/config.json:ro

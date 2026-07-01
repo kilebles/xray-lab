@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+SECRETS_FILE="$ROOT_DIR/.env.secrets"
+ENV_FILE="$ROOT_DIR/.env"
+
+XRAY_VER=$(grep '^XRAY_VER=' "$ENV_FILE" | cut -d= -f2)
+
+if [[ -f "$SECRETS_FILE" ]]; then
+  echo "[warn] $SECRETS_FILE already exists. Overwriting..."
+fi
+
+echo "[*] Pulling xray-core image: ghcr.io/xtls/xray-core:${XRAY_VER}"
+docker pull --quiet "ghcr.io/xtls/xray-core:${XRAY_VER}"
+
+# Идентификатор клиента — сервер пускает только его
+XRAY_UUID=$(docker run --rm "ghcr.io/xtls/xray-core:${XRAY_VER}" uuid)
+echo "[+] UUID: $XRAY_UUID"
+
+# Ключи Reality (x25519): приватный — на сервере, публичный — у клиента
+REALITY_KEYS=$(docker run --rm "ghcr.io/xtls/xray-core:${XRAY_VER}" x25519)
+REALITY_PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key:' | awk '{print $NF}')
+REALITY_PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key:'  | awk '{print $NF}')
+echo "[+] Reality private key: $REALITY_PRIVATE_KEY"
+echo "[+] Reality public key:  $REALITY_PUBLIC_KEY"
+
+# Токен в TLS handshake — сервер по нему отличает своих от чужих
+REALITY_SHORT_ID=$(openssl rand -hex 8)
+echo "[+] Reality short ID:    $REALITY_SHORT_ID"
+
+cat > "$SECRETS_FILE" <<EOF
+XRAY_UUID=${XRAY_UUID}
+REALITY_PRIVATE_KEY=${REALITY_PRIVATE_KEY}
+REALITY_PUBLIC_KEY=${REALITY_PUBLIC_KEY}
+REALITY_SHORT_ID=${REALITY_SHORT_ID}
+EOF
+
+# Подставляем значения в шаблоны конфигов — xray-core не умеет читать env-переменные
+export XRAY_UUID REALITY_PRIVATE_KEY REALITY_PUBLIC_KEY REALITY_SHORT_ID
+envsubst < "$ROOT_DIR/configs/server/config.template.json" > "$ROOT_DIR/configs/server/config.json"
+envsubst < "$ROOT_DIR/configs/client/config.template.json" > "$ROOT_DIR/configs/client/config.json"
+echo "[+] Configs generated: configs/server/config.json, configs/client/config.json"
+
+echo ""
+echo "[ok] Secrets written to $SECRETS_FILE"
+echo "     Run 'make up' to start the stack."

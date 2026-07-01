@@ -1,0 +1,22 @@
+# Secrets — никогда не коммитим
+.env
+.env.secrets
+*.key
+*.pem
+configs/server/config.json
+configs/client/config.json
+
+# Packet captures
+*.pcap
+*.pcapng
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+.claude
+CLAUDE.md
