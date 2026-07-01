@@ -43,7 +43,7 @@
         "realitySettings": {
           "show": false,
           "fingerprint": "chrome",
-          "serverName": "www.microsoft.com",
+          "serverName": "addons.mozilla.org",
           "password": "${REALITY_PUBLIC_KEY}",
           "shortId": "${REALITY_SHORT_ID}",
           "spiderX": "/"
