@@ -21,8 +21,8 @@ echo "[+] UUID: $XRAY_UUID"
 
 # Ключи Reality (x25519): приватный — на сервере, публичный — у клиента
 REALITY_KEYS=$(docker run --rm "ghcr.io/xtls/xray-core:${XRAY_VER}" x25519)
-REALITY_PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key:' | awk '{print $NF}')
-REALITY_PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key:'  | awk '{print $NF}')
+REALITY_PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'PrivateKey:' | awk '{print $NF}')
+REALITY_PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Password (PublicKey):' | awk '{print $NF}')
 echo "[+] Reality private key: $REALITY_PRIVATE_KEY"
 echo "[+] Reality public key:  $REALITY_PUBLIC_KEY"
 

@@ -34,7 +34,7 @@ gen-secrets:
 # Показать актуальную версию xray-core из GitHub Releases
 latest-version:
 	@curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest \
-		| grep '"tag_name"' | head -1 | cut -d'"' -f4
+		| grep '"tag_name"' | head -1 | cut -d'"' -f4 | tr -d 'v'
 
 # Захватить трафик на порту 443 (требует tcpdump + права)
 capture:
