@@ -45,6 +45,12 @@ envsubst < "$ROOT_DIR/configs/server/config.template.json" > "$ROOT_DIR/configs/
 envsubst < "$ROOT_DIR/configs/client/config.template.json" > "$ROOT_DIR/configs/client/config.json"
 echo "[+] Configs generated: configs/server/config.json, configs/client/config.json"
 
+VLESS_LINK="vless://${XRAY_UUID}@${SERVER_ADDR}:${SERVER_PORT}?security=reality&encryption=none&pbk=${REALITY_PUBLIC_KEY}&sid=${REALITY_SHORT_ID}&fp=chrome&flow=xtls-rprx-vision&type=tcp&sni=www.microsoft.com#xray-lab"
+
 echo ""
 echo "[ok] Secrets written to $SECRETS_FILE"
+echo ""
+echo "Client link:"
+echo "$VLESS_LINK"
+echo ""
 echo "     Run 'make up' to start the stack."
