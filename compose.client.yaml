@@ -2,7 +2,7 @@ name: xray-lab-client
 
 services:
   xray-client:
-    image: ghcr.io/xtls/xray-core:${XRAY_VER:-v26.3.27}
+    image: ghcr.io/xtls/xray-core:${XRAY_VER}
     container_name: xray-client
     restart: unless-stopped
     env_file:
@@ -11,5 +11,8 @@ services:
     ports:
       - "1080:1080"
       - "1081:1081"
+    # По умолчанию образ читает confdir /usr/local/etc/xray/ со всеми дефолтными json.
+    # Переопределяем команду чтобы читал только наш конфиг.
+    command: ["run", "-config", "/usr/local/etc/xray/config.json"]
     volumes:
-      - ./configs/client/config.json:/etc/xray/config.json:ro
+      - ./configs/client/config.json:/usr/local/etc/xray/config.json:ro
