@@ -40,7 +40,8 @@ EOF
 # Подставляем значения в шаблоны конфигов — xray-core не умеет читать env-переменные
 SERVER_ADDR=$(grep '^SERVER_ADDR=' "$ENV_FILE" | cut -d= -f2)
 SERVER_PORT=$(grep '^SERVER_PORT=' "$ENV_FILE" | cut -d= -f2)
-export XRAY_UUID REALITY_PRIVATE_KEY REALITY_PUBLIC_KEY REALITY_SHORT_ID SERVER_ADDR SERVER_PORT
+XRAY_LOGLEVEL=$(grep '^XRAY_LOGLEVEL=' "$ENV_FILE" | cut -d= -f2)
+export XRAY_UUID REALITY_PRIVATE_KEY REALITY_PUBLIC_KEY REALITY_SHORT_ID SERVER_ADDR SERVER_PORT XRAY_LOGLEVEL
 envsubst < "$ROOT_DIR/configs/server/config.template.json" > "$ROOT_DIR/configs/server/config.json"
 envsubst < "$ROOT_DIR/configs/client/config.template.json" > "$ROOT_DIR/configs/client/config.json"
 echo "[+] Configs generated: configs/server/config.json, configs/client/config.json"

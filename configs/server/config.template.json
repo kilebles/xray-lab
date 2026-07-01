@@ -1,6 +1,6 @@
 {
   "log": {
-    "loglevel": "debug"
+    "loglevel": "${XRAY_LOGLEVEL}"
   },
   "inbounds": [
     {
@@ -19,7 +19,7 @@
         "network": "tcp",
         "security": "reality",
         "realitySettings": {
-          "show": true,
+          "show": false,
           "dest": "addons.mozilla.org:443",
           "xver": 0,
           "serverNames": [
