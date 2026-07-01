@@ -44,7 +44,7 @@
           "show": false,
           "fingerprint": "chrome",
           "serverName": "www.microsoft.com",
-          "publicKey": "${REALITY_PUBLIC_KEY}",
+          "password": "${REALITY_PUBLIC_KEY}",
           "shortId": "${REALITY_SHORT_ID}",
           "spiderX": "/"
         }
